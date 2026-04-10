@@ -10,6 +10,7 @@ import os
 import sys
 import shutil
 import logging
+import threading
 import unicodedata
 from . import config, util, formatter
 
@@ -122,11 +123,17 @@ class PathfmtProxy():
         self.job = job
 
     def __getattribute__(self, name):
-        pathfmt = object.__getattribute__(self, "job").pathfmt
+        job = object.__getattribute__(self, "job")
+        pathfmt = job.get_pathfmt() if hasattr(job, "get_pathfmt") else job.pathfmt
         return getattr(pathfmt, name, None) if pathfmt else None
 
     def __str__(self):
-        if pathfmt := object.__getattribute__(self, "job").pathfmt:
+        job = object.__getattribute__(self, "job")
+        if hasattr(job, "get_pathfmt"):
+            pathfmt = job.get_pathfmt()
+        else:
+            pathfmt = job.pathfmt
+        if pathfmt:
             return pathfmt.path or pathfmt.directory
         return ""
 
@@ -138,7 +145,8 @@ class KwdictProxy():
         self.job = job
 
     def __getattribute__(self, name):
-        pathfmt = object.__getattribute__(self, "job").pathfmt
+        job = object.__getattribute__(self, "job")
+        pathfmt = job.get_pathfmt() if hasattr(job, "get_pathfmt") else job.pathfmt
         return pathfmt.kwdict.get(name) if pathfmt else None
 
 
@@ -413,6 +421,31 @@ class NullOutput():
 
     def progress(self, bytes_total, bytes_downloaded, bytes_per_second):
         """Display download progress"""
+
+
+class LockedOutput():
+    __slots__ = ("_output", "_lock")
+
+    def __init__(self, out):
+        self._output = out
+        self._lock = threading.Lock()
+
+    def start(self, path):
+        with self._lock:
+            self._output.start(path)
+
+    def skip(self, path):
+        with self._lock:
+            self._output.skip(path)
+
+    def success(self, path):
+        with self._lock:
+            self._output.success(path)
+
+    def progress(self, bytes_total, bytes_downloaded, bytes_per_second):
+        with self._lock:
+            self._output.progress(
+                bytes_total, bytes_downloaded, bytes_per_second)
 
 
 class PipeOutput(NullOutput):
