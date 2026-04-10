@@ -13,6 +13,9 @@ import unittest
 from unittest.mock import patch
 
 import io
+import time
+import tempfile
+import threading
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from gallery_dl import job, config, text  # noqa E402
@@ -64,6 +67,23 @@ class TestDownloadJob(TestJob):
         self.assertEqual(func(TestExtractor)      , True)
         self.assertEqual(func(TestExtractorParent), False)
         self.assertEqual(func(TestExtractorAlt)   , False)
+
+    def test_download_workers(self):
+        config.set((), "download-workers", 2)
+        config.set(("output",), "mode", False)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config.set((), "base-directory", tmpdir)
+
+            extr = TestExtractor.from_url("test:")
+            tjob = ParallelDownloadJob(extr)
+            status = tjob.run()
+
+            self.assertEqual(status, 0)
+            self.assertGreaterEqual(tjob.max_active, 2)
+            self.assertEqual(len(tjob.paths), 3)
+            for path in tjob.paths:
+                self.assertTrue(os.path.exists(path))
 
 
 class TestKeywordJob(TestJob):
@@ -440,6 +460,34 @@ class TestExtractorException(Extractor):
 class TestExtractorAlt(Extractor):
     category = "test_category_alt"
     subcategory = "test_subcategory"
+
+
+class ParallelDownloadJob(job.DownloadJob):
+
+    def __init__(self, *args, **kwargs):
+        job.DownloadJob.__init__(self, *args, **kwargs)
+        self.active = 0
+        self.max_active = 0
+        self.paths = []
+        self.lock = threading.Lock()
+
+    def download(self, url, pathfmt=None):
+        pathfmt = pathfmt or self.get_pathfmt()
+        pathfmt.fix_extension()
+
+        with self.lock:
+            self.active += 1
+            self.max_active = max(self.max_active, self.active)
+
+        try:
+            time.sleep(0.05)
+            with pathfmt.open("wb") as fp:
+                fp.write(url.encode())
+            self.paths.append(pathfmt.realpath)
+            return True
+        finally:
+            with self.lock:
+                self.active -= 1
 
 
 if __name__ == "__main__":

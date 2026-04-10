@@ -112,6 +112,8 @@
                                 Too Many Requests' response
     --sleep-extractor SECONDS   Number of seconds to wait before starting data
                                 extraction for an input URL
+    -W, --download-workers N    Number of concurrent file downloads per
+                                extractor
     --no-part                   Do not use .part files
     --no-skip                   Do not skip downloads; overwrite existing files
     --no-mtime                  Do not set file modification times according to

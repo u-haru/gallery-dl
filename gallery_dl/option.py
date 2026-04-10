@@ -552,6 +552,11 @@ def build_parser():
               "for an input URL"),
     )
     downloader.add_argument(
+        "-W", "--download-workers",
+        dest="download-workers", metavar="N", action=ConfigAction,
+        help="Number of concurrent file downloads per extractor",
+    )
+    downloader.add_argument(
         "--no-part",
         dest="part", nargs=0, action=ConfigConstAction, const=False,
         help="Do not use .part files",
