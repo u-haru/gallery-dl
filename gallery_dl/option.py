@@ -545,6 +545,11 @@ def build_parser():
         help="Size of in-memory data chunks (default: 32k)",
     )
     downloader.add_argument(
+        "-W", "--download-workers",
+        dest="download-workers", metavar="N", action=ConfigAction,
+        help="Number of concurrent file downloads per extractor",
+    )
+    downloader.add_argument(
         "--no-part",
         dest="part", nargs=0, action=ConfigConstAction, const=False,
         help="Do not use .part files",

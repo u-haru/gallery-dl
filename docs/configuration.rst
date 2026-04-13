@@ -521,6 +521,19 @@ Description
     Number of seconds to sleep before each download.
 
 
+extractor.*.download-workers
+----------------------------
+Type
+    ``integer``
+Default
+    ``1``
+Description
+    Number of file downloads to run in parallel for a single extractor.
+
+    A value greater than ``1`` keeps extraction itself sequential but
+    processes individual file downloads concurrently.
+
+
 extractor.*.sleep-skip
 ----------------------
 Type

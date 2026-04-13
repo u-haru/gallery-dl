@@ -10,6 +10,7 @@
 
 import os
 import logging
+import threading
 from . import util, formatter
 
 log = logging.getLogger("archive")
@@ -61,8 +62,8 @@ class DownloadArchive():
         con.isolation_level = None
 
         self.keygen = keygen
+        self.lock = threading.RLock()
         self.connection = con
-        self.close = con.close
         self.cursor = cursor = con.cursor()
         self._cache_key = cache_key or "_archive_key"
 
@@ -91,16 +92,22 @@ class DownloadArchive():
     def add(self, kwdict):
         """Add item described by 'kwdict' to archive"""
         key = kwdict.get(self._cache_key) or self.keygen(kwdict)
-        self.cursor.execute(self._stmt_insert, (key,))
+        with self.lock:
+            self.cursor.execute(self._stmt_insert, (key,))
 
     def check(self, kwdict):
         """Return True if the item described by 'kwdict' exists in archive"""
         key = kwdict[self._cache_key] = self.keygen(kwdict)
-        self.cursor.execute(self._stmt_select, (key,))
-        return self.cursor.fetchone()
+        with self.lock:
+            self.cursor.execute(self._stmt_select, (key,))
+            return self.cursor.fetchone()
 
     def finalize(self):
         pass
+
+    def close(self):
+        with self.lock:
+            self.connection.close()
 
 
 class DownloadArchiveMemory(DownloadArchive):
@@ -111,34 +118,37 @@ class DownloadArchiveMemory(DownloadArchive):
         self.keys = set()
 
     def add(self, kwdict):
-        self.keys.add(
-            kwdict.get(self._cache_key) or
-            self.keygen(kwdict))
+        with self.lock:
+            self.keys.add(
+                kwdict.get(self._cache_key) or
+                self.keygen(kwdict))
 
     def check(self, kwdict):
         key = kwdict[self._cache_key] = self.keygen(kwdict)
-        if key in self.keys:
-            return True
-        self.cursor.execute(self._stmt_select, (key,))
-        return self.cursor.fetchone()
+        with self.lock:
+            if key in self.keys:
+                return True
+            self.cursor.execute(self._stmt_select, (key,))
+            return self.cursor.fetchone()
 
     def finalize(self):
-        if not self.keys:
-            return
+        with self.lock:
+            if not self.keys:
+                return
 
-        cursor = self.cursor
-        with self.connection:
-            try:
-                cursor.execute("BEGIN")
-            except self._sqlite3.OperationalError:
-                pass
+            cursor = self.cursor
+            with self.connection:
+                try:
+                    cursor.execute("BEGIN")
+                except self._sqlite3.OperationalError:
+                    pass
 
-            stmt = self._stmt_insert
-            if len(self.keys) < 100:
-                for key in self.keys:
-                    cursor.execute(stmt, (key,))
-            else:
-                cursor.executemany(stmt, ((key,) for key in self.keys))
+                stmt = self._stmt_insert
+                if len(self.keys) < 100:
+                    for key in self.keys:
+                        cursor.execute(stmt, (key,))
+                else:
+                    cursor.executemany(stmt, ((key,) for key in self.keys))
 
 
 class DownloadArchivePostgresql():
@@ -148,9 +158,9 @@ class DownloadArchivePostgresql():
         if self._psycopg is None:
             DownloadArchivePostgresql._psycopg = __import__("psycopg")
 
+        self.lock = threading.RLock()
         self.connection = con = self._psycopg.connect(uri)
         self.cursor = cursor = con.cursor()
-        self.close = con.close
         self.keygen = keygen
         self._cache_key = cache_key or "_archive_key"
 
@@ -177,27 +187,33 @@ class DownloadArchivePostgresql():
 
     def add(self, kwdict):
         key = kwdict.get(self._cache_key) or self.keygen(kwdict)
-        try:
-            self.cursor.execute(self._stmt_insert, (key,))
-            self.connection.commit()
-        except Exception as exc:
-            log.error("%s: %s when writing entry: %s",
-                      self.connection, exc.__class__.__name__, exc)
-            self.connection.rollback()
+        with self.lock:
+            try:
+                self.cursor.execute(self._stmt_insert, (key,))
+                self.connection.commit()
+            except Exception as exc:
+                log.error("%s: %s when writing entry: %s",
+                          self.connection, exc.__class__.__name__, exc)
+                self.connection.rollback()
 
     def check(self, kwdict):
         key = kwdict[self._cache_key] = self.keygen(kwdict)
-        try:
-            self.cursor.execute(self._stmt_select, (key,))
-            return self.cursor.fetchone()
-        except Exception as exc:
-            log.error("%s: %s when checking entry: %s",
-                      self.connection, exc.__class__.__name__, exc)
-            self.connection.rollback()
-            return False
+        with self.lock:
+            try:
+                self.cursor.execute(self._stmt_select, (key,))
+                return self.cursor.fetchone()
+            except Exception as exc:
+                log.error("%s: %s when checking entry: %s",
+                          self.connection, exc.__class__.__name__, exc)
+                self.connection.rollback()
+                return False
 
     def finalize(self):
         pass
+
+    def close(self):
+        with self.lock:
+            self.connection.close()
 
 
 class DownloadArchivePostgresqlMemory(DownloadArchivePostgresql):
@@ -208,32 +224,35 @@ class DownloadArchivePostgresqlMemory(DownloadArchivePostgresql):
         self.keys = set()
 
     def add(self, kwdict):
-        self.keys.add(
-            kwdict.get(self._cache_key) or
-            self.keygen(kwdict))
+        with self.lock:
+            self.keys.add(
+                kwdict.get(self._cache_key) or
+                self.keygen(kwdict))
 
     def check(self, kwdict):
         key = kwdict[self._cache_key] = self.keygen(kwdict)
-        if key in self.keys:
-            return True
-        try:
-            self.cursor.execute(self._stmt_select, (key,))
-            return self.cursor.fetchone()
-        except Exception as exc:
-            log.error("%s: %s when checking entry: %s",
-                      self.connection, exc.__class__.__name__, exc)
-            self.connection.rollback()
-            return False
+        with self.lock:
+            if key in self.keys:
+                return True
+            try:
+                self.cursor.execute(self._stmt_select, (key,))
+                return self.cursor.fetchone()
+            except Exception as exc:
+                log.error("%s: %s when checking entry: %s",
+                          self.connection, exc.__class__.__name__, exc)
+                self.connection.rollback()
+                return False
 
     def finalize(self):
-        if not self.keys:
-            return
-        try:
-            self.cursor.executemany(
-                self._stmt_insert,
-                ((key,) for key in self.keys))
-            self.connection.commit()
-        except Exception as exc:
-            log.error("%s: %s when writing entries: %s",
-                      self.connection, exc.__class__.__name__, exc)
-            self.connection.rollback()
+        with self.lock:
+            if not self.keys:
+                return
+            try:
+                self.cursor.executemany(
+                    self._stmt_insert,
+                    ((key,) for key in self.keys))
+                self.connection.commit()
+            except Exception as exc:
+                log.error("%s: %s when writing entries: %s",
+                          self.connection, exc.__class__.__name__, exc)
+                self.connection.rollback()
