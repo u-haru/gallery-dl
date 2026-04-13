@@ -40,6 +40,10 @@ __tests__ = (
         "title"     : "Ririkana | RR_loveit",
         "url"       : "https://simpcity.cr/threads/ririkana-rr_loveit.10731/",
         "views"     : range(900_000, 2_000_000),
+        "path"      : [
+            "Specialised Interests",
+            "Asians",
+        ],
         "tags"      : [
             "asian",
             "big ass",
@@ -296,6 +300,20 @@ __tests__ = (
         "title"      : "Meme Thread",
         "url"        : "https://simpcity.cr/threads/meme-thread.96106/",
     },
+},
+
+{
+    "#url"     : "https://simpcity.cr/threads/alison-brie.11057/post-26955359",
+    "#comment" : "base64-encoded '/redirect/' URLs (#9364)",
+    "#category": ("xenforo", "simpcity", "post"),
+    "#class"   : xenforo.XenforoPostExtractor,
+    "#auth"    : True,
+    "#range"   : "1-3",
+    "#results" : (
+        "https://pixhost.to/show/7595/627084349_img_7411.jpg",
+        "https://pixhost.to/show/7595/627084353_img_7412.jpg",
+        "https://pixhost.to/show/7595/627084355_img_7413.jpg",
+    ),
 },
 
 {

@@ -9,8 +9,7 @@
 """Extractors for XenForo forums"""
 
 from .common import BaseExtractor, Message
-from .. import text, util, exception
-from ..cache import cache
+from .. import text, util
 import binascii
 
 
@@ -80,8 +79,10 @@ class XenforoExtractor(BaseExtractor):
                             params = text.parse_query(text.unescape(ext[24:]))
                             ext = binascii.a2b_base64(params["url"]).decode()
                         elif ext.startswith("/redirect/"):
-                            ext = text.unescape(text.extr(
-                                ext, ">", "<").strip())
+                            if html := text.extr(ext, ">", "<").strip():
+                                ext = text.unescape(html)
+                            elif to := text.extr(ext, "?to=", "&"):
+                                ext = binascii.a2b_base64(to + "==").decode()
                         else:
                             continue
                     elif '"' in ext:
@@ -131,7 +132,7 @@ class XenforoExtractor(BaseExtractor):
 
     def items_media(self, path, pnum, callback=None):
         if (order := self.config("order-posts")) and \
-                order[0] in ("d", "r"):
+                order[0] in {"d", "r"}:
             pages = self._pagination_reverse(path, pnum, callback)
             reverse = True
         else:
@@ -176,7 +177,7 @@ class XenforoExtractor(BaseExtractor):
             if response.history and response.url.endswith("/register"):
                 self._require_auth(response)
             return response
-        except exception.HttpError as exc:
+        except self.exc.HttpError as exc:
             if exc.status == 403 and b">Log in<" in exc.response.content:
                 self._require_auth(exc.response)
             raise
@@ -188,9 +189,10 @@ class XenforoExtractor(BaseExtractor):
 
         username, password = self._get_auth_info()
         if username:
-            self.cookies_update(self._login_impl(username, password))
+            return self.cookies_update(self.cache(
+                self._login_impl, username, password,
+                _exp=365*86400, _mem=False))
 
-    @cache(maxage=365*86400, keyarg=1)
     def _login_impl(self, username, password):
         self.log.info("Logging in as %s", username)
 
@@ -208,7 +210,7 @@ class XenforoExtractor(BaseExtractor):
         if not response.history:
             err = self._extract_error(response.text)
             err = f'"{err}"' if err else None
-            raise exception.AuthenticationError(err)
+            raise self.exc.AuthenticationError(err)
 
         return {
             cookie.name: cookie.value
@@ -315,6 +317,10 @@ class XenforoExtractor(BaseExtractor):
         except ValueError:
             return {}
 
+        path = text.split_html(text.extr(
+            page, 'class="p-breadcrumbs', "</ul>"))
+        del path[0]
+
         main = data.get("mainEntity", data)
         url = main.get("url") or main.get("@id") or ""
 
@@ -326,6 +332,7 @@ class XenforoExtractor(BaseExtractor):
             "tags" : (main["keywords"].split(", ")
                       if "keywords" in main else ()),
             "section": main["articleSection"],
+            "path" : path,
         })
 
         stats = main["interactionStatistic"]
@@ -469,7 +476,7 @@ class XenforoExtractor(BaseExtractor):
         return main["contentUrl"], media
 
     def _require_auth(self, response=None):
-        raise exception.AuthRequired(
+        raise self.exc.AuthRequired(
             ("username & password", "authenticated cookies"), None,
             None if response is None else self._extract_error(response.text))
 
@@ -532,7 +539,7 @@ class XenforoPostExtractor(XenforoExtractor):
 
         pos = page.find(f'data-content="post-{post_id}"')
         if pos < 0:
-            raise exception.NotFoundError("post")
+            raise self.exc.NotFoundError("post")
         html = text.extract(page, "<article ", "<footer", pos-200)[0]
 
         self._parse_thread(page)
@@ -550,7 +557,7 @@ class XenforoThreadExtractor(XenforoExtractor):
         pnum = self.groups[-1]
 
         if (order := self.config("order-posts")) and \
-                order[0] not in ("d", "r"):
+                order[0] not in {"d", "r"}:
             params = "?order=reaction_score" if order[0] == "s" else ""
             pages = self._pagination(path, pnum, params=params)
             reverse = False

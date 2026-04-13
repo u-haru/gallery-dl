@@ -5,10 +5,13 @@ gallery-dl
 *gallery-dl* is a command-line program
 to download image galleries and collections
 from several image hosting sites
-(see `Supported Sites <docs/supportedsites.md>`__).
+(see `Supported Sites <https://codeberg.org/mikf/gallery-dl/src/branch/master/docs/supportedsites.md>`__).
 It is a cross-platform tool
-with many `configuration options <https://gdl-org.github.io/docs/configuration.html>`__
-and powerful `filenaming capabilities <https://gdl-org.github.io/docs/formatting.html>`__.
+with many
+`command-line <https://gdl-org.github.io/docs/options.html>`__ and
+`configuration <https://gdl-org.github.io/docs/configuration.html>`__
+options, as well as powerful
+`file-naming capabilities <https://gdl-org.github.io/docs/formatting.html>`__.
 
 
 |pypi| |discord| |build|
@@ -235,7 +238,7 @@ from:
 
     gallery-dl [OPTIONS]... URLS...
 
-Use :code:`gallery-dl --help` or see `<docs/options.md>`__
+Use :code:`gallery-dl --help` or see `docs/options.md <https://codeberg.org/mikf/gallery-dl/src/branch/master/docs/options.md>`__
 for a full list of all command-line options.
 
 
@@ -292,10 +295,10 @@ A list of all available configuration options and their descriptions
 can be found at `<https://gdl-org.github.io/docs/configuration.html>`__.
 
 | For a default configuration file with available options set to their
-  default values, see `<docs/gallery-dl.conf>`__.
+  default values, see `docs/gallery-dl.conf <https://codeberg.org/mikf/gallery-dl/src/branch/master/docs/gallery-dl.conf>`__.
 
 | For a commented example with more involved settings and option usage,
-  see `<docs/gallery-dl-example.conf>`__.
+  see `docs/gallery-dl-example.conf <https://codeberg.org/mikf/gallery-dl/src/branch/master/docs/gallery-dl-example.conf>`__.
 
 
 Locations
@@ -493,7 +496,7 @@ To authenticate with a ``mastodon`` instance, run *gallery-dl* with
 .. |pypi| image:: https://img.shields.io/pypi/v/gallery-dl?logo=pypi&label=PyPI
     :target: https://pypi.org/project/gallery-dl/
 
-.. |build| image:: https://github.com/mikf/gallery-dl/workflows/tests/badge.svg
+.. |build| image:: https://github.com/mikf/gallery-dl/actions/workflows/tests.yml/badge.svg
     :target: https://github.com/mikf/gallery-dl/actions
 
 .. |gitter| image:: https://badges.gitter.im/gallery-dl/main.svg

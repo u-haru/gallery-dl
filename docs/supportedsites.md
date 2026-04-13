@@ -91,6 +91,12 @@ Consider all listed sites to potentially be NSFW.
     <td>Galleries, Search Results, Tag Searches</td>
     <td></td>
 </tr>
+<tr id="allporncomic" title="allporncomic">
+    <td>AllPornComic</td>
+    <td>https://allporncomic.com/</td>
+    <td>Chapters, Manga, Tag Searches</td>
+    <td></td>
+</tr>
 <tr id="arcalive" title="arcalive">
     <td>Arcalive</td>
     <td>https://arca.live/</td>
@@ -211,6 +217,12 @@ Consider all listed sites to potentially be NSFW.
     <td>Galleries</td>
     <td></td>
 </tr>
+<tr id="comicartfans" title="comicartfans">
+    <td>Comic Art Fans</td>
+    <td>https://www.comicartfans.com/</td>
+    <td>Artists, Artworks, Galleries, Search Results</td>
+    <td></td>
+</tr>
 <tr id="comicvine" title="comicvine">
     <td>Comic Vine</td>
     <td>https://comicvine.gamespot.com/</td>
@@ -228,6 +240,12 @@ Consider all listed sites to potentially be NSFW.
     <td>https://coomer.st/</td>
     <td>Artists, Favorites, Posts, User Profiles</td>
     <td>Supported</td>
+</tr>
+<tr id="cosmos" title="cosmos">
+    <td>Cosmos</td>
+    <td>https://www.cosmos.so/</td>
+    <td>Collections, Collections, Elements, Search Results, User Profiles</td>
+    <td></td>
 </tr>
 <tr id="cyberdrop" title="cyberdrop">
     <td>Cyberdrop</td>
@@ -505,6 +523,18 @@ Consider all listed sites to potentially be NSFW.
     <td>Folders, Galleries, individual Images, User Profiles</td>
     <td></td>
 </tr>
+<tr id="imagepond" title="imagepond">
+    <td>ImagePond</td>
+    <td>https://www.imagepond.net/</td>
+    <td>Albums, Files, User Profiles</td>
+    <td></td>
+</tr>
+<tr id="imageshack" title="imageshack">
+    <td>ImageShack</td>
+    <td>https://imageshack.com/</td>
+    <td>Galleries, individual Images, User Profiles</td>
+    <td></td>
+</tr>
 <tr id="imgbb" title="imgbb">
     <td>ImgBB</td>
     <td>https://imgbb.com/</td>
@@ -570,6 +600,12 @@ Consider all listed sites to potentially be NSFW.
     <td>https://www.iwara.tv/</td>
     <td>Favorites, Followers, Followed Users, individual Images, Playlists, Search Results, Tag Searches, User Profiles, User Images, User Playlists, User Videos, Videos</td>
     <td>Supported</td>
+</tr>
+<tr id="joyreactor" title="joyreactor">
+    <td>JoyReactor</td>
+    <td>https://joyreactor.com/</td>
+    <td>Posts, Search Results, Tag Searches, User Profiles</td>
+    <td></td>
 </tr>
 <tr id="kaliscan" title="kaliscan">
     <td>KaliScan</td>
@@ -790,7 +826,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="nsfwalbum" title="nsfwalbum">
     <td>NSFWalbum.com</td>
     <td>https://nsfwalbum.com/</td>
-    <td>Albums</td>
+    <td>Albums, individual Images</td>
     <td></td>
 </tr>
 <tr id="nudostar" title="nudostar">
@@ -905,7 +941,7 @@ Consider all listed sites to potentially be NSFW.
     <td>Poipiku</td>
     <td>https://poipiku.com/</td>
     <td>Posts, User Profiles</td>
-    <td><a href="https://github.com/mikf/gallery-dl#cookies">Cookies</a></td>
+    <td>Supported</td>
 </tr>
 <tr id="poringa" title="poringa">
     <td>Poringa</td>
@@ -1009,6 +1045,12 @@ Consider all listed sites to potentially be NSFW.
     <td>Articles, Tag Searches</td>
     <td></td>
 </tr>
+<tr id="scatbooru" title="scatbooru">
+    <td>Scatbooru</td>
+    <td>https://scatbooru.co.uk/</td>
+    <td>Favorites, Posts, Tag Searches</td>
+    <td></td>
+</tr>
 <tr id="schalenetwork" title="schalenetwork">
     <td>Schale Network</td>
     <td>https://niyaniya.moe/</td>
@@ -1018,7 +1060,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="scrolller" title="scrolller">
     <td>Scrolller</td>
     <td>https://scrolller.com/</td>
-    <td>Followed Subreddits, Posts, Subreddits</td>
+    <td>Followed Subreddits, Posts, Subreddits, Reddit Users</td>
     <td>Supported</td>
 </tr>
 <tr id="senmanga" title="senmanga">
@@ -1107,7 +1149,7 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="tcbscans" title="tcbscans">
     <td>TCB Scans</td>
-    <td>https://tcbscans.me/</td>
+    <td>https://tcbonepiecechapters.com/</td>
     <td>Chapters, Manga</td>
     <td></td>
 </tr>
@@ -1152,12 +1194,6 @@ Consider all listed sites to potentially be NSFW.
     <td>https://toyhou.se/</td>
     <td>Art, individual Images</td>
     <td></td>
-</tr>
-<tr id="tsumino" title="tsumino">
-    <td>Tsumino</td>
-    <td>https://www.tsumino.com/</td>
-    <td>Galleries, Search Results</td>
-    <td>Supported</td>
 </tr>
 <tr id="tumblr" title="tumblr">
     <td>Tumblr</td>
@@ -1209,7 +1245,7 @@ Consider all listed sites to potentially be NSFW.
 </tr>
 <tr id="urlgalleries" title="urlgalleries">
     <td>Urlgalleries</td>
-    <td>https://urlgalleries.net/</td>
+    <td>https://urlgalleries.com/</td>
     <td>Galleries</td>
     <td></td>
 </tr>
@@ -1396,19 +1432,19 @@ Consider all listed sites to potentially be NSFW.
 <tr id="jpgfish" title="jpgfish">
     <td>JPG Fish</td>
     <td>https://jpg7.cr/</td>
-    <td>Albums, Categories, individual Images, User Profiles, Videos</td>
-    <td></td>
-</tr>
-<tr id="imagepond" title="imagepond">
-    <td>ImagePond</td>
-    <td>https://imagepond.net/</td>
-    <td>Albums, Categories, individual Images, User Profiles, Videos</td>
+    <td>Albums, Categories, Files, User Profiles</td>
     <td></td>
 </tr>
 <tr id="imglike" title="imglike">
     <td>Nude Celeb</td>
     <td>https://imglike.com/</td>
-    <td>Albums, Categories, individual Images, User Profiles, Videos</td>
+    <td>Albums, Categories, Files, User Profiles</td>
+    <td></td>
+</tr>
+<tr id="putmega" title="putmega">
+    <td>Putmega</td>
+    <td>https://putmega.com/</td>
+    <td>Albums, Categories, Files, User Profiles</td>
     <td></td>
 </tr>
 
@@ -1774,12 +1810,6 @@ Consider all listed sites to potentially be NSFW.
 <tr id="reactor" title="reactor">
     <td>Reactor</td>
     <td>http://reactor.cc/</td>
-    <td>Posts, Search Results, Tag Searches, User Profiles</td>
-    <td></td>
-</tr>
-<tr id="joyreactor" title="joyreactor">
-    <td>JoyReactor</td>
-    <td>http://joyreactor.cc/</td>
     <td>Posts, Search Results, Tag Searches, User Profiles</td>
     <td></td>
 </tr>

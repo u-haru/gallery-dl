@@ -28,6 +28,7 @@ CATEGORY_MAP = {
     "ahottie"        : "AHottie",
     "aibooru"        : "AIBooru",
     "allgirlbooru"   : "All girl",
+    "allporncomic"   : "AllPornComic",
     "ao3"            : "Archive of Our Own",
     "archivedmoe"    : "Archived.Moe",
     "archiveofsins"  : "Archive of Sins",
@@ -48,6 +49,7 @@ CATEGORY_MAP = {
     "cien"           : "Ci-en",
     "cohost"         : "cohost!",
     "comedywildlifephoto": "Comedy Wildlife Photography Awards",
+    "comicartfans"   : "Comic Art Fans",
     "comicvine"      : "Comic Vine",
     "cyberfile"      : "CyberFile",
     "dankefuerslesen": "Danke fürs Lesen",
@@ -96,6 +98,7 @@ CATEGORY_MAP = {
     "imagebam"       : "ImageBam",
     "imagefap"       : "ImageFap",
     "imagepond"      : "ImagePond",
+    "imageshack"     : "ImageShack",
     "imagetwist"     : "ImageTwist",
     "imgadult"       : "ImgAdult",
     "imgbb"          : "ImgBB",
@@ -400,6 +403,7 @@ SUBCATEGORY_MAP = {
         "folder": "Filesystems",
     },
     "pixiv": {
+        "followed": "Follows",
         "me"  : "pixiv.me Links",
         "pixivision": "pixivision",
         "sketch": "Sketch",
@@ -424,6 +428,7 @@ SUBCATEGORY_MAP = {
         "books": "Book Searches",
     },
     "scrolller": {
+        "user"     : "Reddit Users",
         "following": "Followed Subreddits",
     },
     "sexcom": {
@@ -455,8 +460,8 @@ SUBCATEGORY_MAP = {
     "twitter": {
         "media": "Media Timelines",
         "tweets": "",
-        "replies": "",
         "community": "",
+        "with-replies": "",
         "list-members": "List Members",
     },
     "vk": {
@@ -574,7 +579,7 @@ AUTH_MAP = {
     "pinterest"      : _COOKIES,
     "pixiv"          : _OAUTH,
     "pixiv-novel"    : _OAUTH,
-    "poipiku"        : _COOKIES,
+    "poipiku"        : "Supported",
     "ponybooru"      : "API Key",
     "reddit"         : _OAUTH,
     "rule34world"    : "Supported",

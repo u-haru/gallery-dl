@@ -1,5 +1,40 @@
 # Changelog
 
+## 1.31.10 - 2026-03-19
+### Extractors
+#### Additions
+- [fantia] add extractor for supported fanclubs ([#9236](https://github.com/mikf/gallery-dl/issues/9236) [#9237](https://github.com/mikf/gallery-dl/issues/9237))
+- [foriio] add support ([#2293](https://github.com/mikf/gallery-dl/issues/2293))
+- [iwara] support `iwara.ai` ([#9241](https://github.com/mikf/gallery-dl/issues/9241))
+- [rule34world] add support ([#9227](https://github.com/mikf/gallery-dl/issues/9227))
+- [wikimedia] support `mgewiki.moe` ([#9258](https://github.com/mikf/gallery-dl/issues/9258))
+- [xenforo] support `blacktowhite.net` ([#9216](https://github.com/mikf/gallery-dl/issues/9216))
+#### Fixes
+- [bellazon] handle `/main/index.php` attachments ([#9140](https://github.com/mikf/gallery-dl/issues/9140))
+- [bilibili] fix & improve `livephoto` filenames ([#9210](https://github.com/mikf/gallery-dl/issues/9210))
+- [deviantart] disable `original` downloads by default ([#9211](https://github.com/mikf/gallery-dl/issues/9211) [#9213](https://github.com/mikf/gallery-dl/issues/9213) [#9217](https://github.com/mikf/gallery-dl/issues/9217))
+- [deviantart] apply `original` to all downloadable file types ([#9217](https://github.com/mikf/gallery-dl/issues/9217))
+- [exhentai] prevent `ValueError` for incomplete MPV data ([#9259](https://github.com/mikf/gallery-dl/issues/9259))
+- [gofile] update Website Token `salt`
+- [myportfolio] disallow `cdn.myportfolio.com` URLs
+- [patreon] restrict legacy `User-Agent` use ([#9249](https://github.com/mikf/gallery-dl/issues/9249))
+- [pholder] fix `Could not locate window.data JSON` error ([#9264](https://github.com/mikf/gallery-dl/issues/9264))
+- [reddit] fix results for `/user/…/comments/` URLs ([#9212](https://github.com/mikf/gallery-dl/issues/9212))
+- [reddit] fix `previews` for `comment` submissions ([#9206](https://github.com/mikf/gallery-dl/issues/9206))
+- [twitter] fix `ondemand.s.a.js` extraction ([#9260](https://github.com/mikf/gallery-dl/issues/9260) [#9262](https://github.com/mikf/gallery-dl/issues/9262) [#9265](https://github.com/mikf/gallery-dl/issues/9265) [#9267](https://github.com/mikf/gallery-dl/issues/9267) [#9270](https://github.com/mikf/gallery-dl/issues/9270))
+- [twitter] prevent crash when processing empty pinned Tweets ([#9231](https://github.com/mikf/gallery-dl/issues/9231))
+#### Improvements
+- [bilibili] extract `user_id` metadata ([#9210](https://github.com/mikf/gallery-dl/issues/9210))
+- [deviantart] remove `blur` filters ([#9217](https://github.com/mikf/gallery-dl/issues/9217))
+- [twitter] implement `previews` option ([#9232](https://github.com/mikf/gallery-dl/issues/9232))
+- [wikimedia] handle `index.php` paths ([#9258](https://github.com/mikf/gallery-dl/issues/9258))
+- [xenforo] add `quoted` option ([#9207](https://github.com/mikf/gallery-dl/issues/9207))
+- [xenforo] add `attachments` & `embeds` options
+- [xenforo] improve auth requirement detection ([#9216](https://github.com/mikf/gallery-dl/issues/9216))
+- [yiffverse] recognize `system` & `meta` tag types
+### Post Processors
+- [mtime] allow using `mode` to select date key
+
 ## 1.31.9 - 2026-03-08
 ### Extractors
 #### Fixes
