@@ -273,7 +273,7 @@ class FacebookExtractor(Extractor):
 
             if not photo["url"]:
                 if retries < self.fallback_retries and self._interval_429:
-                    seconds = self._interval_429()
+                    seconds = self._interval_429(retries + 1)
                     self.log.warning(
                         "Failed to find photo download URL for %s. "
                         "Retrying in %s seconds.", photo_url, seconds,
@@ -307,9 +307,9 @@ class FacebookExtractor(Extractor):
             elif self._detect_jump and not set_id.startswith('pcb.') and \
                     int(photo["next_photo_id"]) > int(photo["id"]) + i*120:
                 self.log.info(
-                    "Detected jump to the beginning of the set. (%s -> %s)",
-                    photo["id"], photo["next_photo_id"])
-                if self.config("loop", False):
+                    "Detected possible jump to the beginning of the set. "
+                    "(%s -> %s)", photo["id"], photo["next_photo_id"])
+                if self.config("loop", True):
                     all_photo_ids.append(photo["next_photo_id"])
             else:
                 all_photo_ids.append(photo["next_photo_id"])

@@ -72,8 +72,8 @@ class TumblrExtractor(Extractor):
                 r"https?://(\d+\.media\.tumblr\.com(?:/[0-9a-f]+)?"
                 r"/tumblr(?:_inline)?_[^_]+)_\d+\.([0-9a-z]+)").sub
             self._subn_orig_image = text.re(r"/s\d+x\d+/").subn
-            _findall_image = text.re('<img src="([^"]+)"').findall
-            _findall_video = text.re('<source src="([^"]+)"').findall
+            _findall_image = text.re('<img [^>]*src="([^"]+)"').findall
+            _findall_video = text.re('<source [^>]*src="([^"]+)"').findall
 
         for post in self.posts():
             if self.date_min > post["timestamp"]:
@@ -151,7 +151,7 @@ class TumblrExtractor(Extractor):
                 if "question" in post:
                     body = (f"{body} {post['question']} "
                             f"{post.get('answer') or ''}")
-                for url in _findall_image(body):
+                for url in util.unique(_findall_image(body)):
                     url, fb = self._original_inline_image(url)
                     if fb:
                         post["_fallback"] = self._original_image_fallback(

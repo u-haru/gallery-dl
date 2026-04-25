@@ -1208,7 +1208,7 @@ Default
     ``"_path"``
 Description
     Insert a reference to the current
-    `PathFormat <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/path.py#L27>`__
+    `PathFormat <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/path.py#L27>`__
     data structure into metadata dictionaries as the given name.
 
     For example, setting this option to ``"gdl_path"`` would make it possible
@@ -1225,7 +1225,7 @@ Default
     ``"_extr"``
 Description
     Insert a reference to the current
-    `Extractor <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/extractor/common.py#L28>`__
+    `Extractor <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/extractor/common.py#L30>`__
     object into metadata dictionaries as the given name.
 
 
@@ -1361,7 +1361,8 @@ Type
 Default
     ``null``
 Example
-    * ``"$HOME/.archives/{category}.sqlite3"``
+    * ``"$HOME/.archives/gdl.sqlite3"``
+    * ``[":~", ".archives", "{category}.sqlite3"]``
     * ``"postgresql://user:pass@host/database"``
 Description
     File to store IDs of downloaded files in. Downloads of files
@@ -1375,14 +1376,14 @@ Description
 
     If this value is a
     `PostgreSQL Connection URI <https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS>`__,
-    the archive will use this PostgreSQL database as backend (requires
-    `Psycopg <https://www.psycopg.org/>`__).
+    the archive will use this PostgreSQL database as backend
+    (requires `Psycopg <https://www.psycopg.org/>`__).
 Note
     Archive files that do not already exist get generated automatically.
 
-    Archive paths support basic `Format String`_ replacements,
-    but be aware that using external inputs for building local paths
-    may pose a security risk.
+    | To use replacement fields in a path,
+      specify it as a `list` of `strings` (see |Path+|_)
+    | (for example ``[":~", ".archives", "{category}.sqlite3"]``)
 
 
 extractor.*.archive-event
@@ -2427,6 +2428,12 @@ Description
       ``R``, ``X``, and ``XXX`` rated images,
       while ``3`` (``1|2``) would return only
       ``None`` and ``Soft`` rated images,
+Note
+    Requires
+    `api-key <extractor.civitai.api-key_>`__
+    or authenticated
+    `cookies <extractor.*.cookies_>`__
+    to allow NSFW content.
 
 
 extractor.civitai.period
@@ -2552,7 +2559,7 @@ extractor.cosmos.format
 Type
     * ``string``
 Default
-    ``"jpg"``
+    ``"jpeg"``
 Example
     ``"avif"``
 Description
@@ -3305,9 +3312,9 @@ extractor.facebook.loop
 Type
     ``bool``
 Default
-    ``false``
+    ``true``
 Description
-    Continue when detecting a jump to a set's beginning.
+    Continue when detecting a possible jump to a set's beginning.
 
 
 extractor.facebook.videos
@@ -5580,6 +5587,27 @@ Description
     Also search Plurk comments for URLs.
 
 
+extractor.plurk.external
+-------------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Follow external links in Plurk posts that are not hosted on
+    ``images.plurk.com`` or ``imgs.plurk.com``.
+
+
+extractor.plurk.replurk
+-----------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Process replurked posts in addition to original posts.
+
+
 extractor.[postmill].save-link-post-body
 ----------------------------------------
 Type
@@ -5636,15 +5664,21 @@ extractor.reddit.api
 Type
     ``string``
 Default
-    ``"rest"``
+    ``"auto"``
 Description
     Selects which API endpoints to use.
+
+    ``"auto"``
+        Use ``"oauth"`` when a
+        `client_id <extractor.reddit.client-id & .user-agent-oauth_>`__
+        is given, ``"rest"`` otherwise.
 
     ``"oauth"``
         Use the OAuth API at ``https://oauth.reddit.com``
 
         Requires
-        `client-id & user-agent <extractor.reddit.client-id & .user-agent_>`__
+        `client-id & user-agent
+        <extractor.reddit.client-id & .user-agent-oauth_>`__
         and uses a
         `refresh token <extractor.reddit.refresh-token_>`__
         for authentication.
@@ -7210,6 +7244,16 @@ Default
 Description
     Number of empty search result batches
     to accept before stopping.
+
+
+extractor.twitter.showreplies
+-----------------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Expand ``Show replies`` stubs.
 
 
 extractor.twitter.timeline.strategy
@@ -9447,6 +9491,18 @@ Note
     Only applies to ``"mode": "json"`` and ``"jsonl"``.
 
 
+metadata.empty
+--------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Write empty
+    JSON / ``tags`` / `content-format <metadata.content-format_>`__
+    data and create empty files.
+
+
 metadata.open
 -------------
 Type
@@ -10035,7 +10091,7 @@ Type
     ``list`` of ``strings``
 Default
     The ``modules`` list in
-    `extractor/__init__.py <https://github.com/mikf/gallery-dl/blob/master/gallery_dl/extractor/__init__.py#L12>`__
+    `extractor/__init__.py <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/extractor/__init__.py#L12>`__
 Example
     ``["reddit", "danbooru", "mangadex"]``
 Description
@@ -10058,7 +10114,7 @@ Description
     i.e. classes with a ``pattern`` attribute.
 Note
     ``null`` references internal extractors defined in
-    `extractor/__init__.py <https://github.com/mikf/gallery-dl/blob/master/gallery_dl/extractor/__init__.py#L12>`__
+    `extractor/__init__.py <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/extractor/__init__.py#L12>`__
     or by `extractor.modules`_.
 
 
@@ -10181,7 +10237,7 @@ Type
 Description
     A Python |Module|_ whose namespace,
     in addition to the ``GLOBALS`` dict in
-    `util.py <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/util.py#L566-L578>`__,
+    `util.py <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/util.py#L746-L763>`__,
     is used as |globals parameter|__ for compiled Expressions_.
 
 .. |globals parameter| replace:: ``globals`` parameter
@@ -10435,8 +10491,10 @@ How To
       and paste it into your configuration file as ``"client-secret"``
 
 
-extractor.reddit.client-id & .user-agent
-----------------------------------------
+.. _extractor.reddit.client-id & .user-agent:
+
+extractor.reddit.client-id & .user-agent-oauth
+----------------------------------------------
 Type
     ``string``
 How To
@@ -10455,7 +10513,7 @@ How To
       "installed app") and put it in your configuration file
       as ``"client-id"``
     * use "``Python:<application name>:v1.0 (by /u/<username>)``" as
-      ``user-agent`` and replace ``<application name>`` and ``<username>``
+      ``user-agent-oauth`` and replace ``<application name>`` and ``<username>``
       accordingly (see Reddit's
       `API access rules <https://github.com/reddit/reddit/wiki/API>`__)
     * clear your `cache <cache.file_>`__ to delete any remaining
@@ -10705,9 +10763,9 @@ Description
           In addition to the default
           `LogRecord attributes <https://docs.python.org/3/library/logging.html#logrecord-attributes>`__,
           it is also possible to access the current
-          `extractor <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/extractor/common.py#L28>`__,
-          `job <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/job.py#L33>`__,
-          `path <https://github.com/mikf/gallery-dl/blob/v1.27.0/gallery_dl/path.py#L27>`__,
+          `extractor <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/extractor/common.py#L30>`__,
+          `job <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/job.py#L35>`__,
+          `path <https://codeberg.org/mikf/gallery-dl/src/tag/v1.32.0/gallery_dl/path.py#L27>`__,
           and `keywords` objects and their attributes, for example
           ``"{extractor.url}"``, ``"{path.filename}"``, ``"{keywords.title}"``
         * Default:
@@ -10897,7 +10955,7 @@ Description
         Raise an exception.
 
         This can be an exception defined in
-        `exception.py <https://github.com/mikf/gallery-dl/blob/master/gallery_dl/exception.py>`_
+        `exception.py <https://codeberg.org/mikf/gallery-dl/src/branch/master/gallery_dl/exception.py>`_
         or a
         `built-in exception <https://docs.python.org/3/library/exceptions.html#exception-hierarchy>`_
         (e.g. ``ZeroDivisionError``)
@@ -10905,7 +10963,7 @@ Description
         Set a ``flag``.
 
         | Expected syntax is ``<flag>[ = <value>]`` (e.g. ``post = stop``)
-        | ``<flag>`` can be one of ``file``, ``post``, ``child``, ``download``
+        | ``<flag>`` can be one of ``file``, ``post``, ``child``, ``download``, ``clear``
         | ``<value>`` can be one of ``stop``, ``abort``, ``terminate``, ``restart``, ``skip``, ``pause``, ``toggle``, ``clear`` (default ``stop``)
     ``keyword``:
         Set a `keyword <extractor.*.keywords_>`__ value
@@ -11026,8 +11084,8 @@ Reference
 .. _open():             https://docs.python.org/3/library/functions.html#open
 .. _json.dump():        https://docs.python.org/3/library/json.html#json.dump
 .. _mature_content:     https://www.deviantart.com/developers/http/v1/20160316/object/deviation
-.. _Authentication:     https://github.com/mikf/gallery-dl#authentication
-.. _OAuth:              https://github.com/mikf/gallery-dl#oauth
+.. _Authentication:     https://codeberg.org/mikf/gallery-dl#authentication
+.. _OAuth:              https://codeberg.org/mikf/gallery-dl#oauth
 .. _youtube-dl:         https://github.com/ytdl-org/youtube-dl
 .. _yt-dlp:             https://github.com/yt-dlp/yt-dlp
 .. _FFmpeg:             https://www.ffmpeg.org/

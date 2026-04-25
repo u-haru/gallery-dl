@@ -77,12 +77,12 @@ class XenforoExtractor(BaseExtractor):
                             ext = "https:" + ext
                         elif ext.startswith("/goto/link-confirmation?"):
                             params = text.parse_query(text.unescape(ext[24:]))
-                            ext = binascii.a2b_base64(params["url"]).decode()
+                            ext = self._b64decode(params["url"])
                         elif ext.startswith("/redirect/"):
-                            if html := text.extr(ext, ">", "<").strip():
+                            if to := text.extr(ext, "?to=", "&"):
+                                ext = self._b64decode(to)
+                            elif html := text.extr(ext, ">", "<").strip():
                                 ext = text.unescape(html)
-                            elif to := text.extr(ext, "?to=", "&"):
-                                ext = binascii.a2b_base64(to + "==").decode()
                         else:
                             continue
                     elif '"' in ext:
@@ -276,6 +276,10 @@ class XenforoExtractor(BaseExtractor):
                 end = content.index("</blockquote", end+13)
             content = content[:beg] + content[end+13:]
         return content
+
+    def _b64decode(self, value):
+        return binascii.a2b_base64(
+            value.replace("-", "+").replace("_", "/") + "==").decode()
 
     def _extract_error(self, html):
         if msg := (text.extr(html, "blockMessage--error", "</") or
@@ -521,6 +525,10 @@ BASE_PATTERN = XenforoExtractor.update({
     "blacktowhite": {
         "root": "https://www.blacktowhite.net",
         "pattern": r"(?:www\.)?blacktowhite\.net",
+    },
+    "thefappeningforum": {
+        "root": "https://thefappeningblog.com/forum",
+        "pattern": r"(?:www\.)?thefappeningblog\.com/forum",
     },
 })
 

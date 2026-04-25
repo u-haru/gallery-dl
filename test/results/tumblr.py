@@ -273,6 +273,18 @@ __tests__ = (
 },
 
 {
+    "#url"     : "https://www.tumblr.com/inkrton/133012034697/favorite-himouto",
+    "#comment" : "'answer' post with duplicate results (gh#9418)",
+    "#class"   : tumblr.TumblrPostExtractor,
+    "#auth"    : True,
+    "#results" : "https://64.media.tumblr.com/d3a6fc21e7b671ee81c9290922eac59d/tumblr_inline_nxnwmvDDDX1r7av0p_1280.jpg",
+    "#count"   : 1,
+
+    "num"  : 1,
+    "count": 1,
+},
+
+{
     "#url"     : "https://www.tumblr.com/oidial/812307562622042112/i-understand-the-concern-but-you-cant-get-between",
     "#comment" : "'reblogs: same-blog' option (#9360)",
     "#class"   : tumblr.TumblrPostExtractor,
@@ -298,6 +310,29 @@ __tests__ = (
         "name": "oidial",
         "uuid": "t:7e50zZpVin78ZAzj-oLhlg",
     },
+},
+
+{
+    "#url"     : "https://akenotumiki.tumblr.com/post/92208031886/7-19",
+    "#comment" : "failed to extract both inline images (gh#6505)",
+    "#class"   : tumblr.TumblrPostExtractor,
+    "#auth"    : True,
+    "#results" : (
+        "https://64.media.tumblr.com/971a911b1dcb4df5c51d7b1cdb5d2ca8/tumblr_inline_n8xz0p3cJc1sgvvyd.png",
+        "https://64.media.tumblr.com/da1f879ec973b2cf2705103d84aea300/tumblr_inline_n8xz62QB901sgvvyd.png",
+    ),
+
+    "blog_name" : "akenotumiki",
+    "count"     : 2,
+    "date"      : "dt:2014-07-19 04:10:00",
+    "id"        : 92208031886,
+    "post_url"  : "https://akenotumiki.tumblr.com/post/92208031886/%E6%9C%AC%E6%97%A5%E3%81%AE%E3%82%89%E3%81%8F%E3%81%8C%E3%81%8D719",
+    "reblog_key": "OsL6VhQH",
+    "slug"      : "本日のらくがき719",
+    "summary"   : "本日のらくがき(7/19)",
+    "tags"      : ["ハナヤマ　らくがき"],
+    "title"     : "本日のらくがき(7/19)",
+    "type"      : "text",
 },
 
 {

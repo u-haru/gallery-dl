@@ -23,7 +23,7 @@ class CosmosExtractor(Extractor):
     archive_fmt = "{id}_{filename}"
 
     def _init(self):
-        self.fmt = self.config("format", "jpg")
+        self.fmt = self.config("format", "jpeg")
 
     def request_graphql(self, opname, variables):
         headers = {
@@ -93,9 +93,12 @@ class CosmosExtractor(Extractor):
             media["filename"] = url[url.rfind("/")+1:-4]
             media["extension"] = "mp4"
         else:
-            media["url"] = f"{url}?format={self.fmt}"
             media["filename"] = url[url.rfind("/")+1:]
-            media["extension"] = self.fmt
+            if self.fmt is None:
+                media["extension"] = "avif"
+            else:
+                media["url"] = f"{url}?format={self.fmt}"
+                media["extension"] = self.fmt
 
         return media
 
@@ -212,13 +215,19 @@ class CosmosCollectionExtractor(CosmosExtractor):
 class CosmosUserExtractor(CosmosExtractor):
     subcategory = "user"
     directory_fmt = ("{category}", "{user[username]} ({user[id]})")
-    pattern = BASE_PATTERN + r"/(\w+)"
+    pattern = BASE_PATTERN + r"/([^/?#]+)"
     example = "https://cosmos.so/USER"
 
     def elements(self):
-        user = self.kwdict["user"] = self._extract_user(self.groups[0])
+        username = self.groups[0]
+        if username.startswith("id:"):
+            uid = int(username[3:])
+        else:
+            user = self.kwdict["user"] = self._extract_user(username)
+            uid = user["id"]
+
         variables = {
-            "userId"       : user["id"],
+            "userId"       : uid,
             "callingUserId": 0,
             "isLoggedIn"   : False,
         }
