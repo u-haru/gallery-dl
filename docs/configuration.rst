@@ -2527,19 +2527,6 @@ Description
     ``Authorization`` header value used for `/multi-search` queries.
 
 
-extractor.comick.lang
----------------------
-Type
-    * ``string``
-    * ``list`` of ``strings``
-Example
-    * ``"en"``
-    * ``"fr,it,pl"``
-    * ``["fr", "it", "pl"]``
-Description
-    |ISO 639-1| code(s) to filter chapters by.
-
-
 extractor.coomer.files
 ----------------------
 Type
@@ -3163,7 +3150,7 @@ Type
 Default
     ``2``
 Description
-    Number of times a failed image gets retried
+    Number of times a failed image gets retried,
     or ``-1`` for infinite retries.
 
 
@@ -3261,6 +3248,8 @@ Description
     ``"metadata"``
         Load only a gallery's metadata from the
         `API <https://ehwiki.org/wiki/API#Gallery_Metadata>`_
+    ``"torrent"``
+        Download a gallery's ``.torrent`` files
 
 
 extractor.exhentai.tags
@@ -3283,6 +3272,17 @@ Default
     ``false``
 description
     Extract comments that include photo attachments made by the author of the post.
+
+
+extractor.facebook.fallback-retries
+-----------------------------------
+Type
+    ``integer``
+Default
+    ``2``
+Description
+    Number of times empty pages get retried,
+    or ``-1`` for infinite retries.
 
 
 extractor.facebook.include
@@ -3443,6 +3443,20 @@ Description
     ``authorization`` header value
     used for requests to ``https://apiv3.fansly.com/api``
     to access locked content.
+
+
+extractor.filester.domain
+-------------------------
+Type
+    ``string``
+Default
+    ``"filester.me"``
+Description
+    Specifies the domain used by ``filester`` extractors.
+
+    Setting this option to ``"auto"``
+    uses the same domain as a given input URL.
+
 
 
 extractor.flickr.access-token & .access-token-secret
@@ -3970,11 +3984,20 @@ Description
 extractor.instagram.audio
 -------------------------
 Type
-    ``bool``
+    * ``bool``
+    * ``string``
 Default
     ``false``
 Description
-    Download background music files.
+    Controls audio download behavior.
+
+    ``true`` | ``"dash"`` | ``"ytdl"``
+        Download audio from ``dash_manifest`` data using |ytdl| when available
+        and a non-DASH format otherwise
+    ``"merged"``
+        Download non-DASH formats
+    ``false``
+        Do not download audio files
 
 
 extractor.instagram.cursor
@@ -4084,6 +4107,16 @@ Description
         Descending order by ID
 Note
     This option only affects ``highlights``.
+
+
+extractor.instagram.pinned
+--------------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Process pinned posts.
 
 
 extractor.instagram.previews
@@ -4200,6 +4233,25 @@ Description
     Show a warning when downloading videos with a
     `User-Agent <extractor.*.user-agent_>`__
     header causing potentially lowered video quality.
+
+
+extractor.instagram.wd
+----------------------
+Type
+    * ``bool``
+    * ``string``
+Default
+    ``false``
+Description
+    | Controls how to handle ``wd`` cookies,
+    | which possibly limit the dimensions of returned photos.
+
+    ``true``
+        Keep ``wd`` cookie
+    ``false``
+        Unset/delete ``wd`` cookie
+    any ``string``
+        Set ``wd`` cookie to this value
 
 
 extractor.instagram.stories.split
@@ -4960,6 +5012,18 @@ Note
     It is possible to use ``"all"`` instead of listing all values separately.
 
 
+extractor.[nitter].fallback-retries
+-----------------------------------
+Type
+    ``integer``
+Default
+    ``2``
+Description
+    Number of times fetching a Tweets results page is retried
+    after receiving an empty response,
+    or ``-1`` for infinite retries.
+
+
 extractor.[nitter].quoted
 -------------------------
 Type
@@ -5186,6 +5250,16 @@ Description
     to access 18+ content without `API Key <extractor.[philomena].api-key_>`_.
 
     See `Filters <https://derpibooru.org/filters>`_ for details.
+
+
+extractor.[philomena].comments
+------------------------------
+Type
+    ``bool``
+Default
+    ``false``
+Description
+    Extract ``comments`` metadata.
 
 
 extractor.[philomena].svg
@@ -5767,6 +5841,16 @@ Description
 
     ``null`` means not including this parameter at all
     and letting Reddit chose a default.
+
+
+extractor.reddit.pinned
+-----------------------
+Type
+    ``bool``
+Default
+    ``true``
+Description
+    Process pinned submissions.
 
 
 extractor.reddit.previews
@@ -6747,7 +6831,7 @@ Type
 Default
     ``2``
 Description
-    Number of retries for fetching full-resolution images
+    Number of retries for fetching full-resolution images,
     or ``-1`` for infinite retries.
 
 
@@ -7592,26 +7676,6 @@ Description
     Download the active episode's ``thumbnail``.
 
     Useful for creating CBZ archives with actual source thumbnails.
-
-
-extractor.weebdex.data-saver
-----------------------------
-Type
-    ``bool``
-Default
-    ``false``
-Description
-    Enable `Data Saver` mode and download lower quality versions of chapters.
-
-
-extractor.weebdex.manga.lang
-----------------------------
-Type
-    ``string``
-Default
-    ``"en"``
-Description
-    |ISO 639-1| code selecting which chapters to download.
 
 
 extractor.weibo.gifs
@@ -8661,7 +8725,8 @@ Description
     Controls whether the output strings should be shortened to fit
     on one console line.
 
-    Set this option to ``"eaw"`` to also work with east-asian characters
+    Set this option to ``"eaw"`` (East Asian Width)
+    to display the correct result for east-asian characters
     with a display width greater than 1.
 
 
@@ -8708,6 +8773,20 @@ Description
 
 .. __: `output.mode`_
 
+
+output.units
+------------
+Type
+    ``string``
+Default
+    ``decimal``
+Description
+    Selects which units to use when displaying byte values.
+
+    ``decimal`` | ``base-10`` | ``si`` | ``metric``
+        Decimal units (``KB``, ``MB``, ``GB``, ...)
+    ``binary`` | ``base-2`` | ``iec``
+        Binary units (``KiB``, ``MiB``, ``GiB``, ...)
 
 output.ansi
 -----------

@@ -315,8 +315,14 @@ class TwitterExtractor(Extractor):
         if "legacy" in card:
             card = card["legacy"]
 
-        name = card["name"].rpartition(":")[2]
-        bvals = card["binding_values"]
+        try:
+            name = card["name"].rpartition(":")[2]
+            bvals = card["binding_values"]
+        except Exception:
+            self.log.debug("%s: Ignoring external card (%s)",
+                           tweet["id_str"], card.get("rest_id"))
+            return
+
         if isinstance(bvals, list):
             bvals = {bval["key"]: bval["value"]
                      for bval in card["binding_values"]}
@@ -679,7 +685,7 @@ class TwitterExtractor(Extractor):
                 udata["friends_mutual"] = self.api.friends_following_list(
                     uid).get("total_count")
             except Exception as exc:
-                self.traceback(exc)
+                self.log.traceback(exc)
                 self.log.warning("u%s: Failed to extract extended user "
                                  "metadata (%s: %s)",
                                  uid, exc.__class__.__name__, exc)
@@ -1624,6 +1630,7 @@ class TwitterAPI():
         pgn = cfg("search-pagination", "max_id")
         if pgn in {"max_id", "maxid", "id"}:
             update_variables = self._update_variables_search_maxid
+            self._var_maxid_prev = None
         elif pgn in {"until", "date", "datetime", "dt"}:
             update_variables = self._update_variables_search_date
             self._var_date_prev = None
@@ -2452,7 +2459,18 @@ class TwitterAPI():
     def _update_variables_search_maxid(self, variables, cursor, tweet):
         try:
             tweet_id = tweet.get("id_str") or tweet["legacy"]["id_str"]
-            max_id = "max_id:" + str(int(tweet_id)-1)
+            max_id = int(tweet_id)
+
+            user = self.extractor._user
+            if user is not None or max_id == self._var_maxid_prev:
+                if user is None:
+                    self.log.debug("Repeated 'max_id' value (%s)", max_id)
+                # reduce 'max_id' timestamp milliseconds by 1
+                # https://docs.x.com/fundamentals/x-ids
+                max_id = (max_id - 0x400000) | 0x3fffff
+            self.log.debug("Next 'max_id': %s", max_id)
+            self._var_maxid_prev = max_id
+            max_id = "max_id:" + str(max_id)
 
             query, n = text.re(r"\bmax_id:\d+").subn(
                 max_id, variables["rawQuery"])

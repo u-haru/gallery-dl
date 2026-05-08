@@ -72,6 +72,7 @@ CATEGORY_MAP = {
     "filester"       : "filester.me",
     "fitnakedgirls"  : "FitNakedGirls",
     "foriio"         : "foriio",
+    "framedsc"       : "FRAMED. Screenshot Community",
     "furaffinity"    : "Fur Affinity",
     "furry34"        : "Furry 34 com",
     "girlswithmuscle": "Girls with Muscle",
@@ -278,6 +279,10 @@ SUBCATEGORY_MAP = {
     },
     "audiochan": {
         "audio": "Audios",
+    },
+    "aryion": {
+        "messagepage": "Message Page Submissions",
+        "watch": "Watched Users",
     },
     "bilibili": {
         "user-articles-favorite": "User Article Favorites",

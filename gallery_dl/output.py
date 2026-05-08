@@ -18,6 +18,8 @@ from . import config, util, formatter
 # --------------------------------------------------------------------
 # Globals
 
+format_bytes = util.format_bytes_decimal
+
 try:
     TTY_STDOUT = sys.stdout.isatty()
 except Exception:
@@ -59,7 +61,7 @@ else:
     CHAR_SKIP = "# "
     CHAR_SUCCESS = "✔ "
     CHAR_ELLIPSIES = "…"
-
+OFFSET_BYTES = 7
 
 # --------------------------------------------------------------------
 # Logging
@@ -374,6 +376,14 @@ def configure_standard_streams():
         stream.reconfigure(**options)
 
 
+def configure_units():
+    global format_bytes, OFFSET_BYTES
+
+    if config.get(("output",), "units") in {"binary", "base-2", "iec"}:
+        format_bytes = util.format_bytes_binary
+        OFFSET_BYTES = 8
+
+
 # --------------------------------------------------------------------
 # Downloader output
 
@@ -478,13 +488,13 @@ class TerminalOutput():
         stdout_write(f"\r{self.shorten(CHAR_SUCCESS + path)}\n")
 
     def progress(self, bytes_total, bytes_downloaded, bytes_per_second):
-        bdl = util.format_value(bytes_downloaded)
-        bps = util.format_value(bytes_per_second)
+        bdl = format_bytes(bytes_downloaded)
+        bps = format_bytes(bytes_per_second)
         if bytes_total is None:
-            stderr_write(f"\r{bdl:>7}B {bps:>7}B/s ")
+            stderr_write(f"\r{bdl:>{OFFSET_BYTES}}B {bps:>{OFFSET_BYTES}}B/s ")
         else:
             stderr_write(f"\r{bytes_downloaded * 100 // bytes_total:>3}% "
-                         f"{bdl:>7}B {bps:>7}B/s ")
+                         f"{bdl:>{OFFSET_BYTES}}B {bps:>{OFFSET_BYTES}}B/s ")
 
 
 class ColorOutput(TerminalOutput):
@@ -559,13 +569,13 @@ class CustomOutput():
         stdout_write(self._fmt_success(path))
 
     def progress(self, bytes_total, bytes_downloaded, bytes_per_second):
-        bdl = util.format_value(bytes_downloaded)
-        bps = util.format_value(bytes_per_second)
+        bdl = format_bytes(bytes_downloaded)
+        bps = format_bytes(bytes_per_second)
         if bytes_total is None:
             stderr_write(self._fmt_progress(bdl, bps))
         else:
             stderr_write(self._fmt_progress_total(
-                bdl, bps, util.format_value(bytes_total),
+                bdl, bps, format_bytes(bytes_total),
                 bytes_downloaded * 100 // bytes_total))
 
 

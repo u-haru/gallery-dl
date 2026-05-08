@@ -229,12 +229,6 @@ Consider all listed sites to potentially be NSFW.
     <td>Tag Searches</td>
     <td></td>
 </tr>
-<tr id="comick" title="comick">
-    <td>Comick</td>
-    <td>https://comick.io/</td>
-    <td>Chapters, Covers, Manga</td>
-    <td></td>
-</tr>
 <tr id="coomer" title="coomer">
     <td>Coomer</td>
     <td>https://coomer.st/</td>
@@ -310,7 +304,7 @@ Consider all listed sites to potentially be NSFW.
 <tr id="aryion" title="aryion">
     <td>Eka's Portal</td>
     <td>https://aryion.com/</td>
-    <td>Favorites, Galleries, Posts, Search Results, Tag Searches, Watches</td>
+    <td>Favorites, Galleries, Message Page Submissions, Posts, Search Results, Tag Searches, Watched Users</td>
     <td>Supported</td>
 </tr>
 <tr id="eporner" title="eporner">
@@ -395,6 +389,12 @@ Consider all listed sites to potentially be NSFW.
     <td>foriio</td>
     <td>https://foriio.com/</td>
     <td>User Profiles, Works</td>
+    <td></td>
+</tr>
+<tr id="framedsc" title="framedsc">
+    <td>FRAMED. Screenshot Community</td>
+    <td>https://framedsc.com/</td>
+    <td>individual Images, Raws, Search Results</td>
     <td></td>
 </tr>
 <tr id="furaffinity" title="furaffinity">
@@ -1330,12 +1330,6 @@ Consider all listed sites to potentially be NSFW.
 <tr id="weebcentral" title="weebcentral">
     <td>Weeb Central</td>
     <td>https://weebcentral.com/</td>
-    <td>Chapters, Manga</td>
-    <td></td>
-</tr>
-<tr id="weebdex" title="weebdex">
-    <td>WeebDex</td>
-    <td>https://weebdex.org/</td>
     <td>Chapters, Manga</td>
     <td></td>
 </tr>
