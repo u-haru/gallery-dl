@@ -231,7 +231,6 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
     def _items_hitomi(self):
         if self.config("metadata", False):
             data = self.metadata_from_api()
-            data["date"] = self.parse_timestamp(data["posted"])
         else:
             data = {}
 
@@ -241,7 +240,7 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
         yield Message.Queue, url, data
 
     def _items_metadata(self):
-        yield Message.Directory, "", self.metadata_from_api()
+        yield Message.Directory, "", self.metadata_from_api(update=False)
 
     def _items_torrents(self):
         data = self.metadata_from_api()
@@ -251,7 +250,7 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
 
         base = (f"https://ehtracker.org/get/{data['gid']}/"
                 if self.root[9] == "-" else
-                f"{self.root}/torrent/{data['gid']}/")
+                f"{self.root}/torrent/")
 
         data["extension"] = "torrent"
         for data["num"], torrent in enumerate(torrents, 1):
@@ -259,15 +258,21 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
             data["date"] = self.parse_timestamp(torrent["added"])
             data["filename"] = data["name"]
             data["image_token"] = data["hash"][:10]
-            url = f"{base}{data['hash']}.torrent"
+            data["_fallback"] = self._fallback_torrent(data)
+            url = f"{base}{data['gid']}/{data['hash']}.torrent"
             yield Message.Url, url, data
+
+    def _fallback_torrent(self, data):
+        url = (f"{self.root}/gallerytorrents.php"
+               f"?gid={data['gid']}&t={data['token']}")
+        tpage = self.request(url).text
+        yield text.unescape(text.iextr(tpage, data["hash"], '"', '"'))
 
     def get_metadata(self, page):
         """Extract gallery metadata"""
         data = self.metadata_from_page(page)
         if self.config("metadata", False):
             data.update(self.metadata_from_api())
-            data["date"] = self.parse_timestamp(data["posted"])
         if self.config("tags", True):
             tags = collections.defaultdict(list)
             for tag in data["tags"]:
@@ -325,7 +330,7 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
 
         return data
 
-    def metadata_from_api(self):
+    def metadata_from_api(self, update=True):
         data = {
             "method"   : "gdata",
             "gidlist"  : ((self.gallery_id, self.gallery_token),),
@@ -336,7 +341,11 @@ class ExhentaiGalleryExtractor(ExhentaiExtractor):
         if "error" in data:
             raise self.exc.AbortExtraction(data["error"])
 
-        return data["gmetadata"][0]
+        data = data["gmetadata"][0]
+        if update:
+            data["date"] = self.parse_timestamp(data["posted"])
+            data["title"] = text.unescape(data["title"])
+        return data
 
     def image_from_page(self, page):
         """Get image url and data from webpage"""
